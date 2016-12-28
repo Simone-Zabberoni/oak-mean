@@ -1,0 +1,13 @@
+<div class="jumbotron text-center">
+	<h1>Welcome to the Oak Mean Manager</h1>
+
+	<div ng-if="!main.loggedIn">
+		<p>Login to manage your Oak boards.</p>
+		<a href="/login" class="btn btn-primary">Login</a>
+	</div>
+
+	<div ng-if="main.loggedIn">
+		<p>Boards.</p>
+		<a href="/devices" class="btn btn-primary">View Boards</a>
+	</div>
+</div>

@@ -1,0 +1,58 @@
+<div class="page-header">
+	<h1>
+		Device {{ device.deviceData.device.name }}
+	</h1>
+
+</div>
+
+<div class="jumbotron text-center" ng-show="device.processing">
+	<span class="glyphicon glyphicon-repeat spinner"></span>
+	<p>Loading...</p>
+</div>
+
+<table class="table table-bordered table-striped" ng-show="device.variables">
+	<thead>
+		<tr>
+			<th>Variable Name</th>
+			<th>Variable Type</th>
+			<th>Current value</th>
+	 </tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="oak_var in device.variables">
+			<td>{{ oak_var.name }}</td>
+			<td>{{ oak_var.type }}</td>
+			<td>{{ oak_var.result }}</td>
+		</tr>
+	</tbody>
+</table>
+
+<table class="table table-bordered table-striped" ng-show="device.deviceData.device.id">
+	<thead>
+		<tr>
+			<th>Function Name</th>
+			<th>Value</th>
+			<th>Action</th>
+	 </tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="oak_func_name in device.deviceData.device.functions">
+			<td>{{ oak_func_name }}</td>
+			<td><input type="text" ng-model="device.toSend[oak_func_name]"  /></td>
+							<!--<button ng-click="device.func(device.deviceData.device.id, oak_func_name  )" class="btn btn-primary">Call function</a></td> -->
+			 <td>
+					<!--<a ng-href='#here' ng-click='device.sendFunc(device.deviceData.device.id, "set_angle" , "130" )' >click me</a>-->
+					<!--<a ng-href='#' ng-click='device.sendFunc(device.deviceData.device.id, oak_func_name, "110" )' >click me</a>-->
+	<!--				<a ng-href='#' ng-click='device.sendFunc(device.deviceData.device.id, oak_func_name, device.toSend[oak_func_name] )' >click me</a>-->
+					<button ng-click='device.sendFunc(device.deviceData.device.id, oak_func_name, device.toSend[oak_func_name] )' >Call function</a>
+			</td>
+
+<!--			<td>{{ person.name }}</td>
+			<td>{{ person.username }}</td> -->
+<!--			<td class="col-sm-2">
+				<a ng-href="/users/{{ person._id }}" class="btn btn-danger">Edit</a>
+				<a href="#" ng-click="user.deleteUser(person._id)" class="btn btn-primary">Delete</a>
+			</td>-->
+		</tr>
+	</tbody>
+</table>
