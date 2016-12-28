@@ -20,12 +20,12 @@ angular.module('deviceService', [])
 		return $http.get('/api/devices/');
 	};
 
-
+  // valore di una variabile
 	deviceFactory.variable = function(id, variableName) {
 		return $http.get('/api/variable/' + id + '/' + variableName);
 	};
 
-
+  // invio parametro ad una funzione
 	deviceFactory.func = function(id, funcData) {
 		return $http.post('/api/function/' + id, funcData);
 	};

@@ -12,19 +12,21 @@ angular.module('app.routes', ['ngRoute'])
 		// login page
 		.when('/login', {
 			templateUrl : 'app/views/pages/login.html',
-   			controller  : 'mainController',
-    			controllerAs: 'login'
+   		controller  : 'mainController',
+    	controllerAs: 'login'
 		})
 
+		// device list
 		.when('/devices', {
-			templateUrl: 'app/views/pages/devices/all.html',
-			controller: 'deviceController',
+			templateUrl : 'app/views/pages/devices/all.html',
+			controller  : 'deviceController',
 			controllerAs: 'device'
 		})
 
+		// single device info
 		.when('/devices/:device_id', {
-			templateUrl: 'app/views/pages/devices/single.html',
-			controller: 'deviceControllerSingle',
+			templateUrl : 'app/views/pages/devices/single.html',
+			controller  : 'deviceControllerSingle',
 			controllerAs: 'device'
 		})
 

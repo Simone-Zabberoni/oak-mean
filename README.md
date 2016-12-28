@@ -28,5 +28,5 @@ Ci sono vari miglioramenti/espansioni possibili:
 [root@ip-172-31-20-90 oak-node-mean]# npm install
 [...]
 [root@ip-172-31-20-90 oak-node-mean]# node server.js
-Magic happens on port 8080
+Oak Mean Manager listen on : http://localhost:8080
 ```

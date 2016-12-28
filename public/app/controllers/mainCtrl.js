@@ -32,7 +32,7 @@ angular.module('mainCtrl', [])
 				// if a user successfully logs in, redirect to users page
 				if (response.data.success) {
 					console.log('mainCtrl login OK: ' + response.data.token);
-					$location.path('/users');
+					$location.path('/devices');
 				}
 				else {
 					console.log('mainCtrl login NON OK: ' + response.data.token);
