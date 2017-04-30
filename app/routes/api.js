@@ -1,40 +1,46 @@
-var bodyParser 		= require('body-parser'); 	// get body-parser
+// CALL THE PACKAGES --------------------
+
+var bodyParser 		= require('body-parser');
 var User       		= require('../models/user');
-var jwt        		= require('jsonwebtoken');
-var config     		= require('../../config');
-var Particle 	 		= require('particle-api-js');
 var cookieParser 	= require('cookie-parser');
 
-// super secret for creating tokens
+// Json WEB Tokens
+var jwt        		= require('jsonwebtoken');
+
+// Configuration file
+var config     		= require('../../config');
+
+// Particle.io API
+var Particle 	 		= require('particle-api-js');
+
+
+// Read super secret for creating tokens from config file
 var superSecret = config.secret;
 
-// particle object
+// Create particle object
 var particle = new Particle();
 
 
 module.exports = function(app, express) {
 
-	// oggetto principale per il routing
+	// Main routing object
 	var apiRouter = express.Router();
 
-	// route to authenticate a user (POST http://localhost:8080/api/authenticate)
+	// Route to authenticate a user (POST http://localhost:8080/api/authenticate)
 	apiRouter.post('/authenticate', function(req, res) {
 
+		// Call particle.io API
 		particle.login({username: req.body.username, password: req.body.password})
 		.then(
 			function(data){
 		  	console.log('Login success! Token: ', data.body.access_token);
-
-				// da qui in poi si lavora via tokens, salvo lo username nei cookies
+				// Save username into a cookie and send the result to the client application
 				res.cookie('loggedUser', req.body.username)
-
-				// e invio il json risultante
 				.json({
 		      	success: true,
 		      	message: 'Authentication successful.',
 						token: data.body.access_token
 		    	});
-
 		},
 			function(err) {
 		    console.log('API call completed on promise fail: ', err);
@@ -46,8 +52,7 @@ module.exports = function(app, express) {
 		);
 	});
 
-	// autentica e lista tokens
-	// TODO: completare usare per evitare la ri-autentica
+	// TODO: Particle Token list. Implement, avoid re-auth etc..
 	apiRouter.post('/tokens', function(req, res) {
 		particle.listAccessTokens({ username: req.body.username, password: req.body.password }).then(function(data) {
 		  console.log('data on listing access tokens: ', data);
@@ -56,25 +61,21 @@ module.exports = function(app, express) {
 		});
 	});
 
-
-	// 	MIDDLEWARE - qui verifichiamo il token, ovvero se ci siamo già autenticati  o meno
+	// 	MIDDLEWARE - here we check for the token for EVERY route traversal
 	apiRouter.use(function(req, res, next) {
-		// do logging
 		console.log('Entering middleware...');
 
-	  // cerchiamo il token
+	  // Search the token in body, query and headers
 	  var token = req.body.token || req.query.token || req.headers['x-access-token'];
 
-	  // decode token
 	  if (token) {
-			// se il token esiste next();
+			// if token exists, then next();
 			console.log('Middleware: already authenticated');
 			console.log("Reading cookie: "+ req.cookies.loggedUser );
 			next(); //
 	  } else {
 			console.log('Middleware: not authenticated');
-	    // if there is no token
-	    // return an HTTP response of 403 (access forbidden) and an error message
+	    // if there is no token return an HTTP response of 403 (access forbidden) and an error message
    	 	res.status(403).send({
    	 		success: false,
    	 		message: 'No token provided.'
@@ -82,17 +83,18 @@ module.exports = function(app, express) {
 	  }
 	});
 
-	// Api TEST
-	// accessed at GET http://localhost:8080/api
+	// Api TEST - accessed at GET http://localhost:8080/api
 	apiRouter.get('/', function(req, res) {
 		res.json({ message: 'hooray! welcome to our api!' });
 	});
 
-	// info su tutti i devices
+	// Info for all devices at GET http://localhost:8080/api/devices
 	apiRouter.route('/devices')
 		.get(function(req, res) {
-			// check header or url parameters or post parameters for token
+			// Search the token in body, query and headers
 		  var token = req.body.token || req.query.token || req.headers['x-access-token'];
+
+			// Call particle.io API
 			var devicesPr = particle.listDevices({ auth: token });
 
 			devicesPr.then(
@@ -142,7 +144,7 @@ module.exports = function(app, express) {
 			);
 	});
 
-	// valore di una variabile
+	// Get a device's specific variable valure
 	apiRouter.route('/variable/:deviceId/:variableName')
 		.get(function(req, res) {
 			var token = req.body.token || req.query.token || req.headers['x-access-token'];
@@ -164,6 +166,7 @@ module.exports = function(app, express) {
 				});
 	});
 
+	// Call a device function with a specific value
 	apiRouter.route('/function/:deviceId/')
 		.post(function(req, res) {
 			var token = req.body.token || req.query.token || req.headers['x-access-token'];
@@ -187,13 +190,13 @@ module.exports = function(app, express) {
 			  });
 	});
 
-	// lettura cookies
-	// TODO : orrendo, di fatto legge dal browser e ritorna al browser. Gestire lato angular
+	// Read logged user name from cookies
+	// TODO : awful, rewrite
 	apiRouter.get('/me', function(req, res) {
 		console.log("-----------------Inside ME api : " + req.cookies.loggedUser)
 		res.send(req.cookies.loggedUser);
 	});
 
-
+	// Return the router object
 	return apiRouter;
 };

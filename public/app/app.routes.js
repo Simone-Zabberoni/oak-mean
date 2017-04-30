@@ -1,6 +1,7 @@
 angular.module('app.routes', ['ngRoute'])
 
 .config(function($routeProvider, $locationProvider) {
+	// define all URI - VIEW - CONTROLLER mappings 
 
 	$routeProvider
 

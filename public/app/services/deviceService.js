@@ -20,19 +20,17 @@ angular.module('deviceService', [])
 		return $http.get('/api/devices/');
 	};
 
-  // valore di una variabile
+  // get variable value
 	deviceFactory.variable = function(id, variableName) {
 		return $http.get('/api/variable/' + id + '/' + variableName);
 	};
 
-  // invio parametro ad una funzione
+  // call a device func
 	deviceFactory.func = function(id, funcData) {
 		return $http.post('/api/function/' + id, funcData);
 	};
 
-
-
-	// return auth factory object
+	// return device  factory object
 	return deviceFactory;
 
 });

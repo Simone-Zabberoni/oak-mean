@@ -2,28 +2,45 @@
 // ======================================
 
 // CALL THE PACKAGES --------------------
-var express      = require('express');					// express for server side routing
-var app          = express(); 									// define our app using express
+// express for server side routing
+var express      = require('express');
+
+// Define our app using express
+var app          = express();
+
+// Use body parser for token extraction
 var bodyParser   = require('body-parser');
-var morgan       = require('morgan');						// console logging
-var mongoose     = require('mongoose');					// mongodb data modeling
-var config 	     = require('./config');					// app configuration, tcp port and ip bind
+
+// Console logging
+var morgan       = require('morgan');
+
+// Mongodb data modeling
+var mongoose     = require('mongoose');
+
+// App configuration, tcp port and ip bind
+var config 	     = require('./config');
+
+// Utilities for local dir & files
 var path 	       = require('path');
-var Particle     = require('particle-api-js');	// Particle.io API
-var cookieParser = require('cookie-parser');		// read/write cookies
+
+// Particle.io API
+var Particle     = require('particle-api-js');
+
+// Read/write cookies
+var cookieParser = require('cookie-parser');
 
 
 // APP CONFIGURATION ==================
 // ====================================
 
-// use body parser so we can grab information from POST requests
+// Use body parser so we can grab information from POST requests
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// use cookie parser, to record session data
+// Use cookie parser, to record session data
 app.use(cookieParser());
 
-// configure our app to handle CORS requests
+// Configure our app to handle CORS requests
 app.use(function(req, res, next) {
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
@@ -37,13 +54,11 @@ app.use(morgan('dev'));
 // DB connection - still unused
 // mongoose.connect(config.database);
 
-// set static files location
+// Set static files location
 // used for requests that our frontend will make
 app.use(express.static(__dirname + '/public'));
 
 
-// ROUTES FOR OUR API =================
-// ====================================
 
 // API ROUTES ------------------------
 // all api routes defined in app/routes/api.js are mapped to /api URI

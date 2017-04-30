@@ -18,12 +18,10 @@ Log in with you particle.io account and you will be able to:
 ## TODO - lots of them!
 
 There are lots improvements I want to work on:
-- mongodb: the "M" of Mean is still unimplemented...
+- mongodb: the "M" of Mean is still unimplemented: save tokens on local mongo, save devices, history of variables etc...
 - token : verify expiration and avoid re-auth
 - particle api: include more API integration (add/claim/remove device, event streams)
 - generic code cleanup
-
-
 
 
 ## Install & run
