@@ -2,15 +2,15 @@
 // ======================================
 
 // CALL THE PACKAGES --------------------
-var express      = require('express');					// express usato per il routing lato server
+var express      = require('express');					// express for server side routing
 var app          = express(); 									// define our app using express
-var bodyParser   = require('body-parser'); 			// body-parser, lettura parametri POST
-var morgan       = require('morgan'); 					// per loggare in console su node
-var mongoose     = require('mongoose');					// data mondel per mongodb
-var config 	     = require('./config');					// configurazione server, porte, ip, db
+var bodyParser   = require('body-parser');
+var morgan       = require('morgan');						// console logging
+var mongoose     = require('mongoose');					// mongodb data modeling
+var config 	     = require('./config');					// app configuration, tcp port and ip bind
 var path 	       = require('path');
-var Particle     = require('particle-api-js');	// Interfacciamento con Particle.io
-var cookieParser = require('cookie-parser');		// lettura/scrittura cookies
+var Particle     = require('particle-api-js');	// Particle.io API
+var cookieParser = require('cookie-parser');		// read/write cookies
 
 
 // APP CONFIGURATION ==================
@@ -20,7 +20,7 @@ var cookieParser = require('cookie-parser');		// lettura/scrittura cookies
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// aggiunta cookie parser, lo uso per memorizzare lo username
+// use cookie parser, to record session data
 app.use(cookieParser());
 
 // configure our app to handle CORS requests
@@ -34,8 +34,8 @@ app.use(function(req, res, next) {
 // log all requests to the console
 app.use(morgan('dev'));
 
-// Collegamento al db indicato in config.js
-mongoose.connect(config.database);
+// DB connection - still unused
+// mongoose.connect(config.database);
 
 // set static files location
 // used for requests that our frontend will make
@@ -46,17 +46,17 @@ app.use(express.static(__dirname + '/public'));
 // ====================================
 
 // API ROUTES ------------------------
-// innestiamo tutte le rotte definite in app/routes/api.js sull'uri /api
+// all api routes defined in app/routes/api.js are mapped to /api URI
+// Example: route do_something in app/routes/api is mapped to /api/do_something
 var apiRoutes = require('./app/routes/api')(app, express);
 app.use('/api', apiRoutes);
 
 // MAIN CATCHALL ROUTE ---------------
 // has to be registered after API ROUTES
-// alla prima get / -> giriamo gli utenti al file index che poi carica angular
+// redirect the first get / to our index.html wich will load Angular
 app.get('*', function(req, res) {
 	res.sendFile(path.join(__dirname + '/public/app/views/index.html'));
 });
-
 
 // START THE SERVER
 // ====================================
